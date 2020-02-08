@@ -57,6 +57,19 @@ public class MyBot2 {
             return BuildingType.ENERGY.buildCommand(0, row);
         }
 
+        // row = checkEmptyDB();
+        // if (row != null) {
+        //     return BuildingType.DEFENSE.buildCommand(7, row);
+        // }
+
+        row = checkUndefended();
+        if (row != null) {
+            if (cells[7][row] == null)
+                BuildingType.DEFENSE.buildCommand(7, row);
+            else
+                BuildingType.DEFENSE.buildCommand(6, row);
+        }
+
         Point point = rowNotFull();
         if (point != null) {
             int i = point.x, j = point.y;
@@ -77,7 +90,6 @@ public class MyBot2 {
     public Point rowNotFull() {
         int j = 7, n = 7;
         while (n-- > 0) {
-            boolean full = true;
             Integer i = getEmptyCol(j);
             if (i != null) {
                 return new Point(i, j);
@@ -90,6 +102,23 @@ public class MyBot2 {
         return null;
     }
 
+    public Integer checkUndefended() {
+        for (int i = 0; i <= 7; ++i) {
+            for (int j = 0; j <= 7; ++j) {
+                if (cells[i+8][j] != null) {
+                    Cell c = cells[i+8][j];
+                    if (c instanceof Building) {
+                        Building b = (Building)c;
+                        if (b.buildingType == BuildingType.ATTACK) {
+                            return j;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public Integer getEmptyCol(int j) {
         // check DB
         for (int i = 7; i >= 7; --i) {
@@ -97,6 +126,7 @@ public class MyBot2 {
                 return i;
             }
         }
+
         // check AB
         for (int i = 6; i >= 1; --i) {
             if (cells[i][j] == null) {
@@ -108,6 +138,31 @@ public class MyBot2 {
 
     public Integer checkEmptyEB() {
         int x = 0;
+        for (int j = 0; j < gameHeight; ++j) {
+            Cell c = cells[x][j];
+            if (c == null) {
+                return j;
+            }
+        }
+        return null;
+    }
+
+    public Integer checkEmptyEB2() {
+        int x = 0, cnt = 0;
+        Integer row = null;
+        for (int j = 0; j < gameHeight; ++j) {
+            Cell c = cells[x][j];
+            if (c == null) {
+                row = j;
+            } else {
+                ++cnt;
+            }
+        }
+        return cnt > 4 ? null : row;
+    }
+
+    public Integer checkEmptyDB() {
+        int x = 7;
         for (int j = 0; j < gameHeight; ++j) {
             Cell c = cells[x][j];
             if (c == null) {

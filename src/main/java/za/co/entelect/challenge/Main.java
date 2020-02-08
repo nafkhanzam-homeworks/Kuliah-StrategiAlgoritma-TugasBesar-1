@@ -1,6 +1,8 @@
 package za.co.entelect.challenge;
 
 import com.google.gson.Gson;
+
+import za.co.entelect.challenge.entities.CellStateContainer;
 import za.co.entelect.challenge.entities.GameState;
 
 import java.io.*;
