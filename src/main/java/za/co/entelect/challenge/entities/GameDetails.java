@@ -9,6 +9,7 @@ public class GameDetails {
     public int mapWidth;
     public int mapHeight;
     public int roundIncomeEnergy;
+    public IronCurtainStats ironCurtainStats;
     public HashMap<BuildingType, BuildingStats> buildingsStats = new HashMap<>();
 
 }

@@ -14,11 +14,14 @@ public class Main {
     private static final String STATE_FILE_NAME = "state.json";
 
     /**
-     * Read the current state, feed it to the bot, get the output and write it to the command.
+     * Read the current state, feed it to the bot, get the output and write it to
+     * the command.
+     * 
      * @param args the args
      **/
     public static void main(String[] args) throws Exception {
-        System.setErr(new PrintStream(new File("logs.txt")));
+        System.setErr(new PrintStream(new File("errors.log")));
+        System.setOut(new PrintStream(new File("console.log")));
         String state = null;
         try {
             state = new String(Files.readAllBytes(Paths.get(STATE_FILE_NAME)));
@@ -29,7 +32,7 @@ public class Main {
         Gson gson = new Gson();
         GameState gameState = gson.fromJson(state, GameState.class);
 
-        MyBot2 bot = new MyBot2(gameState);
+        MyBot4 bot = new MyBot4(gameState);
         String command = bot.run();
 
         writeBotResponseToFile(command);
@@ -37,6 +40,7 @@ public class Main {
 
     /**
      * Write bot response to file
+     * 
      * @param command the command
      **/
     private static void writeBotResponseToFile(String command) {

@@ -38,36 +38,44 @@ public class MyBot2 {
         myself = gameState.getPlayers().stream().filter(p -> p.playerType == PlayerType.A).findFirst().get();
         opponent = gameState.getPlayers().stream().filter(p -> p.playerType == PlayerType.B).findFirst().get();
 
-        buildings = gameState.getGameMap().stream()
-                .flatMap(c -> c.getBuildings().stream())
+        buildings = gameState.getGameMap().stream().flatMap(c -> c.getBuildings().stream())
                 .collect(Collectors.toList());
 
-        missiles = gameState.getGameMap().stream()
-                .flatMap(c -> c.getMissiles().stream())
-                .collect(Collectors.toList());
+        missiles = gameState.getGameMap().stream().flatMap(c -> c.getMissiles().stream()).collect(Collectors.toList());
 
         cells = new Cell[gameWidth][gameHeight];
-        gameState.getGameMap().stream().flatMap(c -> c.getBuildings().stream()).forEach(b -> cells[b.getX()][b.getY()] = b);
-        gameState.getGameMap().stream().flatMap(c -> c.getMissiles().stream()).forEach(b -> cells[b.getX()][b.getY()] = b);
+        gameState.getGameMap().stream().flatMap(c -> c.getBuildings().stream())
+                .forEach(b -> cells[b.getX()][b.getY()] = b);
+        gameState.getGameMap().stream().flatMap(c -> c.getMissiles().stream())
+                .forEach(b -> cells[b.getX()][b.getY()] = b);
+        // for (int j = 0; j < gameHeight; ++j) {
+        // for (int i = 0; i < gameWidth; ++i) {
+        // Cell c = cells[i][j];
+        // System.out.print(c == null ? " " : " " + c.getX() + "," + c.getY() + " ");
+        // }
+        // System.out.println();
+        // }
     }
 
     public String run() {
-        Integer row = checkEmptyEB();
-        if (row != null) {
-            return BuildingType.ENERGY.buildCommand(0, row);
-        }
+        Integer row = null;
 
         // row = checkEmptyDB();
         // if (row != null) {
-        //     return BuildingType.DEFENSE.buildCommand(7, row);
+        // return BuildingType.DEFENSE.buildCommand(7, row);
         // }
 
         row = checkUndefended();
         if (row != null) {
             if (cells[7][row] == null)
-                BuildingType.DEFENSE.buildCommand(7, row);
-            else
-                BuildingType.DEFENSE.buildCommand(6, row);
+                return BuildingType.DEFENSE.buildCommand(7, row);
+            else if (cells[6][row] == null)
+                return BuildingType.DEFENSE.buildCommand(6, row);
+        }
+
+        row = checkEmptyEB();
+        if (row != null) {
+            return BuildingType.ENERGY.buildCommand(0, row);
         }
 
         Point point = rowNotFull();
@@ -103,15 +111,16 @@ public class MyBot2 {
     }
 
     public Integer checkUndefended() {
-        for (int i = 0; i <= 7; ++i) {
-            for (int j = 0; j <= 7; ++j) {
-                if (cells[i+8][j] != null) {
-                    Cell c = cells[i+8][j];
-                    if (c instanceof Building) {
-                        Building b = (Building)c;
-                        if (b.buildingType == BuildingType.ATTACK) {
-                            return j;
-                        }
+        for (int j = 0; j <= 7; ++j) {
+            for (int i = 0; i <= 7; ++i) {
+                Cell c = cells[i + 8][j];
+                if (c != null && c instanceof Building) {
+                    Building b = (Building) c;
+                    // System.out.println(b.getX() + "," + b.getY() + "," + b.buildingType + "," +
+                    // (cells[7][j] == null)
+                    // + "," + (cells[6][j] == null));
+                    if (b.buildingType == BuildingType.ATTACK && (cells[7][j] == null || cells[6][j] == null)) {
+                        return j;
                     }
                 }
             }
@@ -174,6 +183,7 @@ public class MyBot2 {
 
     private class Point {
         int x, y;
+
         public Point(int x, int y) {
             this.x = x;
             this.y = y;
