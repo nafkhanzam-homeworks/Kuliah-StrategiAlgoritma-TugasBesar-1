@@ -1,8 +1,8 @@
 {
-    "author": "Camcam",
-    "email": "john.doe@example.com",
-    "nickName": "CNA",
-    "botLocation": "/target",
+    "author": "Camcam, Naufal, and Ahadi",
+    "email": "nafkhanalzamzami@gmail.com",
+    "nickName": "Nama Kelompok",
+    "botLocation": "/bin",
     "botFileName": "java-sample-bot-jar-with-dependencies.jar",
     "botLanguage": "java"
 }

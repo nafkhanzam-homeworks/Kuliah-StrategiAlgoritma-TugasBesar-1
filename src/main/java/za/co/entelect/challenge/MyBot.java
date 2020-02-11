@@ -358,7 +358,7 @@ public class MyBot {
         for (int i = 0; i <= 7; ++i) {
             for (int j = 0; j <= 7; ++j) {
                 Building b = getBuilding(i + 8, j);
-                if (b != null && b.buildingType == BuildingType.TESLA) {
+                if (b != null && b.buildingType == BuildingType.TESLA && b.constructionTimeLeft <= 1) {
                     return j;
                 }
             }
