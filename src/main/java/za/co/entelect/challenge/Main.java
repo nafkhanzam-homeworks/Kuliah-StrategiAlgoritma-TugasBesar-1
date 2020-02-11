@@ -32,7 +32,7 @@ public class Main {
         Gson gson = new Gson();
         GameState gameState = gson.fromJson(state, GameState.class);
 
-        MyBot4 bot = new MyBot4(gameState);
+        MyBot bot = new MyBot(gameState);
         String command = bot.run();
 
         writeBotResponseToFile(command);
