@@ -17,7 +17,7 @@ public class MyBot {
     private int gameHeight;
     private Player myself;
     private Player opponent;
-    private Cell[][] cells;
+    private Cell[][] cells, missiles;
 
     /**
      * Constructor
@@ -34,10 +34,11 @@ public class MyBot {
         opponent = gameState.getPlayers().stream().filter(p -> p.playerType == PlayerType.B).findFirst().get();
 
         cells = new Cell[gameWidth][gameHeight];
+        missiles = new Cell[gameWidth][gameHeight];
         gameState.getGameMap().stream().flatMap(c -> c.getBuildings().stream())
                 .forEach(b -> cells[b.getX()][b.getY()] = b);
         gameState.getGameMap().stream().flatMap(c -> c.getMissiles().stream())
-                .forEach(b -> cells[b.getX()][b.getY()] = b);
+                .forEach(b -> missiles[b.getX()][b.getY()] = b);
     }
 
     /**
@@ -122,12 +123,6 @@ public class MyBot {
             }
         }
         return row;
-    }
-
-    public boolean isCollectingEnergy() {
-        // Kondisi stop build AB , buat ngumpul tesla or IC
-
-        return false;
     }
 
     /**
@@ -223,26 +218,6 @@ public class MyBot {
             }
         }
         return null;
-    }
-
-    /**
-     * 
-     * @param x
-     * @return
-     */
-    public Integer createEBSafe(int x) {
-        Integer row = null, min = Integer.MAX_VALUE;
-        for (int j = 0; j <= 7; ++j) {
-            if (cells[x][j] != null) {
-                continue;
-            }
-            int cnt = countEnemyAB(j);
-            if (cnt < min) {
-                min = cnt;
-                row = j;
-            }
-        }
-        return row;
     }
 
     /**
@@ -455,7 +430,7 @@ public class MyBot {
      * @return
      */
     public Missile getMissile(int x, int y) {
-        Cell c = cells[x][y];
+        Cell c = missiles[x][y];
         if (c instanceof Missile) {
             return (Missile) c;
         }
