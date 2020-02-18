@@ -293,7 +293,7 @@ public class MyBot {
 
     /**
      * State yang cocok untuk mengaktifkan iron curtain
-     * 
+     *
      * @return
      */
     public boolean activateICNow() {
